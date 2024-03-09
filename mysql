@@ -1,0 +1,172 @@
+CREATE TABLE service (
+                         service_id INT AUTO_INCREMENT PRIMARY KEY,
+                         service_name VARCHAR(50) NOT NULL,
+                         description TEXT,
+                         duration INT NOT NULL,
+                         price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE product (
+                         product_id INT AUTO_INCREMENT PRIMARY KEY,
+                         service_id INT,
+                         product_name VARCHAR(50) NOT NULL,
+                         description TEXT,
+                         quantity INTEGER NOT NULL,
+                         cost DECIMAL(10, 2) NOT NULL,
+                         FOREIGN KEY (service_id) REFERENCES service(service_id)
+);
+
+CREATE TABLE payment (
+                         payment_id INT AUTO_INCREMENT PRIMARY KEY,
+                         customer_id INT,
+                         appointment_id INT,
+                         amount DECIMAL(10, 2) NOT NULL,
+                         payment_method VARCHAR(50) NOT NULL,
+                         payment_date DATE NOT NULL,
+);
+
+CREATE TABLE customer (
+                          product_id INT AUTO_INCREMENT PRIMARY KEY,
+                          appointment_id INT,
+                          payment_id INT,
+                          customer_name VARCHAR(50) NOT NULL,
+                          phone_number VARCHAR(15),
+                          email VARCHAR(50),
+                          address VARCHAR(100),
+                          FOREIGN KEY (payment_id) REFERENCES payment(payment_id)
+);
+
+CREATE TABLE employee (
+                          employee_id INT AUTO_INCREMENT PRIMARY KEY,
+                          employee_name VARCHAR(50) NOT NULL,
+                          phone VARCHAR(15),
+                          email VARCHAR(50),
+                          position VARCHAR(50) NOT NULL,
+                          salary DECIMAL(10, 2),
+                          FOREIGN KEY (service_id) REFERENCES service(service_id)
+);
+
+CREATE TABLE appointment (
+                             appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+                             customer_id INT,
+                             service_id INT,
+                             employee_id INT,
+                             appointment_date DATE NOT NULL,
+                             appointment_time TIME,
+                             FOREIGN KEY (service_id) REFERENCES service(service_id),
+                             FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+);
+
+CREATE TABLE Employee_Service (
+                                  employee_id INT NOT NULL,
+                                  service_id INT NOT NULL,
+                                  PRIMARY KEY (employee_id, service_id),
+                                  FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
+                                  FOREIGN KEY (service_id) REFERENCES Service(service_id)
+);
+
+CREATE TABLE services2products_unique (
+                                          service_id INT NOT NULL,
+                                          product_id INT NOT NULL,
+                                          PRIMARY KEY (service_id, product_id),
+                                          FOREIGN KEY (service_id) REFERENCES service(service_id),
+                                          FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+CREATE TABLE customers2appointments_unique (
+                                               customer_id INT NOT NULL,
+                                               appointment_id INT NOT NULL,
+                                               PRIMARY KEY (customer_id, product_id),
+                                               FOREIGN KEY (customer_id) REFERENCES appointment(customer_id),
+                                               FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id)
+);
+
+INSERT INTO service (service_id, service_name, duration, price) VALUES
+                                                                    (1, 'Haircut', 30, 25.00),
+                                                                    (2, 'Manicure', 45, 15.00),
+                                                                    (3, 'Pedicure', 60, 20.00),
+                                                                    (4, 'Facial', 45, 30.00),
+                                                                    (5, 'Massage', 60, 40.00);
+
+INSERT INTO product (product_id, product_name, quantity, cost) VALUES
+                                                                   (1, 'Shampoo', 50, 10.00),
+                                                                   (2, 'Conditioner', 40, 8.00),
+                                                                   (3, 'Nail Polish', 100, 5.00),
+                                                                   (4, 'Moisturizer', 30, 15.00),
+                                                                   (5, 'Massage Oil', 20, 20.00);
+
+INSERT INTO customer (customer_id, customer_name, phone_number, email) VALUES
+                                                                           (1, 'John Doe', '123-456-7890', 'john.doe@example.com'),
+                                                                           (2, 'Jane Smith', '987-654-3210', 'jane.smith@example.com'),
+                                                                           (3, 'Mike Johnson', '555-123-4567', 'mike.johnson@example.com'),
+                                                                           (4, 'Emily Davis', '111-222-3333', 'emily.davis@example.com'),
+                                                                           (5, 'Sarah Wilson', '444-555-6666', 'sarah.wilson@example.com');
+
+INSERT INTO appointment (appointment_id, customer_id, service_id, appointment_date, appointment_time) VALUES
+                                                                                                          (1, 1, 1, '2022-01-01', '10:00:00'),
+                                                                                                          (2, 2, 2, '2022-01-02', '14:30:00'),
+                                                                                                          (3, 3, 3, '2022-01-03', '11:15:00'),
+                                                                                                          (4, 4, 4, '2022-01-04', '16:45:00'),
+                                                                                                          (5, 5, 5, '2022-01-05', '09:30:00');
+
+INSERT INTO payment (payment_id, appointment_id, payment_date, amount, payment_method) VALUES
+                                                                                           (1, 1, '2022-01-01', 25.00, 'Cash'),
+                                                                                           (2, 2, '2022-01-02', 15.00, 'Credit Card'),
+                                                                                           (3, 3, '2022-01-03', 20.00, 'Cash'),
+                                                                                           (4, 4, '2022-01-04', 30.00, 'Credit Card'),
+                                                                                           (5, 5, '2022-01-05', 40.00, 'Cash');
+
+INSERT INTO employee (employee_id, employee_name, phone, email, position, salary) VALUES
+                                                                                      (1, 'Amy Johnson', '123-456-7890', 'amy.johnson@example.com', 'Hair Stylist', 2500.00),
+                                                                                      (2, 'Mark Davis', '987-654-3210', 'mark.davis@example.com', 'Nail Technician', 1800.00),
+                                                                                      (3, 'Lisa Smith', '555-123-4567', 'lisa.smith@example.com', 'Esthetician', 2000.00),
+                                                                                      (4, 'David Wilson', '111-222-3333', 'david.wilson@example.com', 'Massage Therapist', 3000.00),
+                                                                                      (5, 'Karen Brown', '444-555-6666', 'karen.brown@example.com', 'Receptionist', 1500.00);
+
+--
+SELECT position, AVG(salary) AS average_salary
+FROM employee
+GROUP BY position
+HAVING average_salary > 2000;
+
+--calculates the total payment amount of customers
+--c. is a shorthand for customer table
+--a. is a shorthand for appointment table
+--p. is a shorthand for payment table
+SELECT c.customer_name, SUM(p.amount) AS total_payment_amount
+FROM customer c
+         JOIN appointment a ON c.customer_id = a.customer_id
+         JOIN payment p ON a.appointment_id = p.appointment_id
+GROUP BY c.customer_name
+ORDER BY total_payment_amount DESC
+LIMIT 5; -- returns the top 5 customers with the highest total payment amounts
+
+--shows customers who made payments with Credit Card
+SELECT c.customer_name, p.payment_id, p.amount, p.payment_method
+FROM customer c
+         JOIN appointment a ON c.customer_id = a.customer_id
+         JOIN payment p ON a.appointment_id = p.appointment_id
+WHERE p.payment_method = 'Credit Card';
+
+--additional query (payment method count)
+SELECT payment_method, COUNT(payment_id) AS total_payments, SUM(amount) AS total_amount
+FROM payment
+GROUP BY payment_method;
+
+--query 4 amount of appointments each employee has for a certain service
+SELECT e.employee_name, s.service_name, COUNT(a.appointment_id) AS appointment_count
+FROM Employee_Service es
+         JOIN Employee e ON es.employee_id = e.employee_id
+         JOIN Service s ON es.service_id = s.service_id
+         JOIN Appointment a ON e.employee_id = a.employee_id AND s.service_id = a.service_id
+WHERE (DATE(date) = date_sub(date('2011-09-17 00:00:00'), INTERVAL 1 week));
+GROUP BY e.employee_id, s.service_id
+ORDER BY appointment_count DESC;
+
+--query 5 shows customer preference
+SELECT c.customer_name, s.service_name, COUNT(a.appointment_id) AS appointment_count
+FROM Appointment a
+         JOIN Customer c ON a.customer_id = c.customer_id
+         JOIN Service s ON a.service_id = s.service_id
+GROUP BY c.customer_id, s.service_id
+ORDER BY appointment_count DESC;
