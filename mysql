@@ -163,7 +163,7 @@ WHERE (DATE(date) = date_sub(date('2011-09-17 00:00:00'), INTERVAL 1 week));
 GROUP BY e.employee_id, s.service_id
 ORDER BY appointment_count DESC;
 
---query 5 shows customer preference
+--query 5 shows customer preference.
 SELECT c.customer_name, s.service_name, COUNT(a.appointment_id) AS appointment_count
 FROM Appointment a
          JOIN Customer c ON a.customer_id = c.customer_id
