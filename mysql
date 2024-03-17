@@ -170,3 +170,80 @@ FROM Appointment a
          JOIN Service s ON a.service_id = s.service_id
 GROUP BY c.customer_id, s.service_id
 ORDER BY appointment_count DESC;
+
+-- = 
+SELECT *
+FROM service
+WHERE service_id = (SELECT service_id FROM product WHERE product_id = 1);
+
+-- UPDATE IN 
+UPDATE service
+SET price = price * 1.1
+WHERE service_id IN (SELECT service_id FROM product WHERE cost > 10);
+
+-- DELETE NOT IN 
+DELETE FROM customer
+WHERE customer_id NOT IN (SELECT customer_id FROM appointment);
+
+-- EXISTS 
+SELECT *
+FROM employee
+WHERE EXISTS (SELECT 1 FROM Employee_Service es WHERE es.employee_id = e.employee_id);
+
+-- NOT EXISTS 
+SELECT *
+FROM service
+WHERE NOT EXISTS (SELECT 1 FROM product WHERE product.service_id = service.service_id);
+
+--  = 
+SELECT *
+FROM employee e
+WHERE e.service_id = (SELECT service_id FROM appointment a WHERE a.employee_id = e.employee_id);
+
+-- IN
+SELECT *
+FROM service
+WHERE service_id IN (SELECT service_id FROM Employee_Service es WHERE es.employee_id = 1);
+
+-- NOT IN 
+SELECT *
+FROM employee e
+WHERE e.employee_id NOT IN (SELECT employee_id FROM Employee_Service es WHERE es.service_id = 1);
+
+-- EXISTS 
+SELECT *
+FROM services
+WHERE EXISTS (SELECT 1 FROM Employee_Serviceces WHERE es.service_id = s.service_id);
+
+-- NOT EXISTS
+SELECT *
+FROM employee
+WHERE NOT EXISTS (SELECT 1 FROM appointment a WHERE a.employee_id = e.employee_id);
+
+-- UNION
+SELECT customer_name, phone_number
+FROM customer
+UNION
+SELECT employee_name, phone
+FROM employee;
+
+-- UNION ALL
+SELECT customer_name, phone_number
+FROM customer
+UNION ALL
+SELECT employee_name, phone
+FROM employee;
+
+-- INTERSECT
+SELECT customer_name, email
+FROM customer
+INTERSECT
+SELECT employee_name, email
+FROM employee;
+
+-- EXCEPT
+SELECT customer_name, address
+FROM customer
+EXCEPT
+SELECT employee_name, email
+FROM employee;
