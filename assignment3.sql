@@ -262,7 +262,7 @@ WHERE service_id IN (
         WHERE cost > 10
     );
 
-IF (
+IF(
 SELECT COUNT(*)
 FROM service
 WHERE price < 100 
