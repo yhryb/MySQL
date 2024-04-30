@@ -14,4 +14,4 @@ FROM appointment
          JOIN customer c ON appointment.customer_id = c.customer_id
          JOIN service s ON appointment.service_id = s.service_id
 GROUP BY c.customer_id, s.service_id
-ORDER BY appointment_count DESC;
+ORDER BY appointment_count DESC
