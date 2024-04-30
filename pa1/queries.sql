@@ -67,4 +67,4 @@ WHERE p.payment_method = 'Credit Card';
 -- additional query (payment method count)
 SELECT payment_method, COUNT(payment_id) AS total_payments, SUM(amount) AS total_amount
 FROM payment
-GROUP BY payment_method;
+GROUP BY payment_method
