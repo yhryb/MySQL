@@ -80,4 +80,4 @@ CREATE TABLE customers2appointments_unique (
                                                PRIMARY KEY (customer_id, product_id),
                                                FOREIGN KEY (customer_id) REFERENCES appointment(customer_id),
                                                FOREIGN KEY (appointment_id) REFERENCES appointment(appointment_id)
-)
+);
